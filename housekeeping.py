@@ -4,7 +4,7 @@ version 0.01 '''
 
 import os
 import getpass
-# add crypto
+from pbkdf2 import crypt
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
@@ -17,7 +17,7 @@ p = getpass.getpass(prompt='Password: ', stream=None)
 def housework():   
     a = os.getcwd()
     print(a)
-    path = "C:\\"
+    path = "/home/lnxdork/"
     print(path)
 
     if a != path:
@@ -30,9 +30,10 @@ def housework():
     else:
         print("The file does not exist")
 
-# change to crypto
-if p == 'lnxdork':
-    print("right")
+pwhash = "$p5k2$$l8MU49Wf$DnF1ouSnIN55uak18OY6rG11faMdmIhh"
+
+if pwhash == crypt(p, pwhash):
+    print("Password good")
 else:
-    print("nope")
+    print("Invalid password")
     housework()
