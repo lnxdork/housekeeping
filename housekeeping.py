@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 ''' This is housekeeping.py
-version 0.01 '''
+version 0.02 '''
 
 import os
 import getpass
+import signal
+import time
 from pbkdf2 import crypt
+
+starttime=time.time()
+timeout = 30
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
-
-# clear the screen
-cls()
-
-p = getpass.getpass(prompt='Password: ', stream=None)
 
 def housework():   
     a = os.getcwd()
@@ -35,10 +35,25 @@ def housework():
     else:
         print("The file does not exist")
 
-pwhash = "$p5k2$$l8MU49Wf$DnF1ouSnIN55uak18OY6rG11faMdmIhh"
-
-if pwhash == crypt(p, pwhash):
-    print("Password good")
-else:
-    print("Invalid password")
+def interrupted(signum, frame):
+    "called when read times out"
+    print('interrupted!')
     housework()
+    exit()
+signal.signal(signal.SIGALRM, interrupted)
+
+# clear the screen
+while True:
+    cls()
+    pwhash = "$p5k2$$l8MU49Wf$DnF1ouSnIN55uak18OY6rG11faMdmIhh"
+    signal.alarm(timeout)
+    p = getpass.getpass(prompt='Password: ', stream=None)
+
+    if pwhash == crypt(p, pwhash):
+        print("Password accepted, sleeping...")
+        signal.alarm(0)
+        time.sleep(60.0 * 15)
+    else:
+        print("Invalid password")
+        housework()
+        exit()
