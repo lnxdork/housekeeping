@@ -18,14 +18,19 @@ def housework():
     a = os.getcwd()
     print(a)
     path = "/home/lnxdork/"
+    file_name = "testfile.txt"
     print(path)
 
     if a != path:
         os.chdir( path )
     print(path)
-
-    if os.path.exists("testfile.txt"):
-        os.remove("testfile.txt")
+    
+    if os.path.exists(file_name):
+        f = open(file_name,'wb')
+        f.write(b'0101010101010101') # make data passes
+        f.close
+        os.rename(file_name, "0000000000") # make rename passes
+        os.remove("0000000000")
         print("File removed.")
     else:
         print("The file does not exist")
